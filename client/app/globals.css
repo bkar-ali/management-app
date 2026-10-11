@@ -1,0 +1,177 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@import "@mantine/core/styles.css";
+@import "mantine-datatable/styles.css";
+
+:root {
+  --main-background: #fff;
+
+  --primary: #6340ff;
+  --primary-light: #6340ff29;
+
+  --primary-hover: #6340ffd3;
+  --primary-light-hover: #bbadf766;
+
+  --main-sidebar: #fff;
+
+  --main-text: #000000;
+
+  --border: #848ea0;
+
+  --input: #3534340c;
+
+  --card: #0200000c;
+  --tooltip: #d0d0d0;
+}
+.dark {
+  --main-background: #161a25;
+
+  --primary: #6340ff;
+  --primary-light: #5e2bf340;
+
+  --primary-hover: #6340ff9c;
+  --primary-light-hover: #6340ff47;
+
+  --main-text: #ffffff;
+
+  --main-sidebar: #0b111add;
+
+  --border: #253047;
+
+  --input: #ffffff05;
+
+  --card: #ffffff0c;
+  --tooltip: #585757;
+}
+
+@theme inline {
+  --color-mainText: var(--main-text);
+  --color-mainBackground: var(--main-background);
+  --color-sidebar: var(--main-sidebar);
+  --color-mainBorder: var(--border);
+  --color-input: var(--input);
+  --color-card: var(--card);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-light: var(--primary-light);
+  --color-primary-light-hover: var(--primary-light-hover);
+  --color-tooltip: var(--tooltip);
+}
+
+.tabsStyle {
+  @apply duration-300 hover:bg-primary-light hover:dark:bg-primary-hover bg-input p-2 border border-mainBorder/20 rounded-xl cursor-pointer;
+}
+
+@import "dhtmlx-gantt/codebase/dhtmlxgantt.css";
+
+/* =========================
+   DHTMLX GANTT - DARK MODE
+   ========================= */
+
+.dark .gantt-wrapper,
+.dark .gantt-wrapper .gantt_container,
+.dark .gantt-wrapper .gantt_grid,
+.dark .gantt-wrapper .gantt_grid_data,
+.dark .gantt-wrapper .gantt_task,
+.dark .gantt-wrapper .gantt_task_bg {
+  background-color: #161a25 !important;
+}
+
+/* Header */
+
+.dark .gantt-wrapper .gantt_grid_scale,
+.dark .gantt-wrapper .gantt_task_scale {
+  background-color: var(--border) !important;
+}
+
+/* Grid rows */
+
+.dark .gantt-wrapper .gantt_row,
+.dark .gantt-wrapper .gantt_task_row {
+  background-color: #161a25 !important;
+}
+
+/* Grid cells */
+
+.dark .gantt-wrapper .gantt_cell,
+.dark .gantt-wrapper .gantt_grid_head_cell {
+  background-color: transparent !important;
+  color: #ffffff !important;
+  border-color: #253047 !important;
+}
+
+/* Timeline scale */
+
+.dark .gantt-wrapper .gantt_scale_cell {
+  background-color: var(--border) !important;
+  color: #e5e7eb !important;
+  border-color: #253047 !important;
+}
+
+/* =========================
+   GANTT INTERACTION
+   ========================= */
+
+/* Task bar hover */
+.dark .gantt-wrapper .gantt_task_line:hover {
+  filter: brightness(1.15) !important;
+  cursor: pointer;
+}
+
+/* Grid row hover */
+.dark .gantt-wrapper .gantt_row:hover {
+  background-color: rgba(99, 102, 241, 0.08) !important;
+}
+
+/* Timeline row hover */
+.dark .gantt-wrapper .gantt_task_row:hover {
+  background-color: rgba(99, 102, 241, 0.08) !important;
+}
+
+/* .dark .gantt-wrapper .gantt_task_line.gantt_selected {
+  filter: brightness(1.2) !important;
+
+  box-shadow:
+    0 0 0 3px rgba(99, 102, 241, 0.75),
+    0 0 18px rgba(99, 102, 241, 0.45) !important;
+
+  z-index: 10 !important;
+}
+
+.dark .gantt-wrapper .gantt_row.gantt_selected .gantt_task_line {
+  filter: brightness(1.2) !important;
+
+  box-shadow:
+    0 0 0 3px rgba(99, 102, 241, 0.75),
+    0 0 18px rgba(99, 102, 241, 0.45) !important;
+
+  z-index: 10 !important;
+} */
+
+/* =========================
+   GANTT SELECTED ROW
+   ========================= */
+
+/* Selected row in the grid */
+.dark .gantt-wrapper .gantt_row.gantt_selected {
+  background-color: rgba(99, 102, 241, 0.15) !important;
+}
+
+/* Selected cells */
+.dark .gantt-wrapper .gantt_row.gantt_selected .gantt_cell {
+  background-color: rgba(99, 102, 241, 0.15) !important;
+  color: #ffffff !important;
+}
+
+/* Selected row in timeline */
+.dark .gantt-wrapper .gantt_task_row.gantt_selected {
+  background-color: rgba(99, 102, 241, 0.15) !important;
+}
+
+/* Make the whole selected row stand out */
+.dark .gantt-wrapper .gantt_row.gantt_selected,
+.dark .gantt-wrapper .gantt_task_row.gantt_selected {
+  box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.35) !important;
+}
