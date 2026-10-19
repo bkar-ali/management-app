@@ -1,4 +1,7 @@
 "use client";
+// React
+import { useEffect } from "react";
+
 // Libraries
 import { motion } from "framer-motion";
 import { toast } from "sonner";
@@ -34,9 +37,17 @@ const initialForm = {
   password: "",
   confirmPassword: "",
 };
+
 const ResetPassword = () => {
-  const resetPasswordCode = sessionStorage.getItem("resetPasswordCode") ?? "";
   const [resetPassword, { isLoading }] = useResetPasswordMutation();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!sessionStorage.getItem("resetPasswordCode")) {
+      router.replace("/forgotPassword");
+    }
+  }, [router]);
+
   const {
     register,
     reset,
@@ -51,15 +62,18 @@ const ResetPassword = () => {
 
   const password = useWatch({ control, name: "password" });
 
-  // const { token } = useParams();
-  const router = useRouter();
-
   const onSubmit = async (data: FormData) => {
-    const { password } = data;
+    const code = sessionStorage.getItem("resetPasswordCode");
+    if (!code) {
+      toast.error("Reset session expired. Please request a new code.");
+      router.replace("/forgotPassword");
+      return;
+    }
+
     try {
       await resetPassword({
-        code: resetPasswordCode,
-        newPassword: password,
+        code,
+        newPassword: data.password,
       }).unwrap();
       sessionStorage.removeItem("resetPasswordCode");
       router.replace("/login");
@@ -67,8 +81,8 @@ const ResetPassword = () => {
     } catch (error) {
       const err = error as FetchBaseQueryError;
       if (err.data) {
-        const data = err.data as ApiError;
-        toast.error(data.message);
+        const apiError = err.data as ApiError;
+        toast.error(apiError.message);
       } else {
         toast.error("Reset Password Failed");
       }
@@ -103,7 +117,7 @@ const ResetPassword = () => {
           />
           <PasswordStrengthMeter password={password} />
           <SubmitButton
-            name="Set New Passowrd"
+            name="Set New Password"
             isValid={isValid}
             isLoading={isLoading}
           />

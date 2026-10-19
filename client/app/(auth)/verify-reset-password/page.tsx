@@ -10,19 +10,21 @@ import { useRouter } from "next/navigation";
 // API
 import { useVerifyResetPassowrdMutation } from "@/app/store/api";
 
-const handleClick = (code: string) => {
-  toast.success(code);
-};
-
 const VerifyEmail = () => {
-  const verificationCode = sessionStorage.getItem("resetPasswordCode");
   const router = useRouter();
   const [verifyResetPass, { isLoading }] = useVerifyResetPassowrdMutation();
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const isComplete = code.every((d) => d !== "");
+
+  useEffect(() => {
+    if (!sessionStorage.getItem("resetPasswordCode")) {
+      router.replace("/forgotPassword");
+    }
+  }, [router]);
 
   const handleChange = (index: number, value: string) => {
-    value.replace(/\s/g, ""); //? Remove Spaces
+    value = value.replace(/\s/g, ""); //? Remove Spaces
     if (/\D/.test(value)) return; //? If There is Any character
 
     const newCode = [...code];
@@ -98,6 +100,7 @@ const VerifyEmail = () => {
   }, [code, resetPasswordCodeSubmit]);
 
   useEffect(() => {
+    if (process.env.NODE_ENV === "production") return;
     const timer = setTimeout(() => {
       toast(`${sessionStorage.getItem("resetPasswordCode")}!`, {
         cancel: {
@@ -147,27 +150,29 @@ const VerifyEmail = () => {
 
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || !isComplete}
             style={{ fontWeight: 700 }}
-            className={`${isLoading ? "cursor-pointer from-primary hover:scale-[1.03] to-purple-600 hover:to-purple-800 text-white " : "cursor-not-allowed from-primary/30 to-purple-600/30 text-gray-300"} mt-3 w-full bg-linear-to-r px-4 py-3 rounded-lg transition duration-300 focus:ring-2 focus:ring-primary focus:outline-none focus:ring-offset-2 focus:ring-offset-gray-900`}
+            className={`${
+              !isLoading && isComplete
+                ? "cursor-pointer from-primary hover:scale-[1.03] to-purple-600 hover:to-purple-800 text-white"
+                : "cursor-not-allowed from-primary/30 to-purple-600/30 text-gray-300"
+            } mt-3 w-full bg-linear-to-r px-4 py-3 rounded-lg transition duration-300 focus:ring-2 focus:ring-primary focus:outline-none focus:ring-offset-2 focus:ring-offset-gray-900`}
           >
             {isLoading ? "Verifying..." : "Verify Email"}
           </button>
         </form>
       </div>
-      {verificationCode && (
-        <div className="px-8 py-4 bg-gray-900/50 flex justify-center">
-          <p className="text-gray-400 text-sm flex">
-            Don&apos;t Recevie it?{" "}
-            <span
-              className="ml-1 flex justify-center text-[14px] text-primary hover:text-purple-600 duration-300 tracking-wider hover:underline cursor-pointer"
-              onClick={() => handleClick(verificationCode)}
-            >
-              Send Again
-            </span>
-          </p>
-        </div>
-      )}
+      <div className="px-8 py-4 bg-gray-900/50 flex justify-center">
+        <p className="text-gray-400 text-sm flex">
+          Didn&apos;t receive it?{" "}
+          <span
+            className="ml-1 flex justify-center text-[14px] text-primary hover:text-purple-600 duration-300 tracking-wider hover:underline cursor-pointer"
+            onClick={() => router.replace("/forgotPassword")}
+          >
+            Send Again
+          </span>
+        </p>
+      </div>
     </motion.div>
   );
 };
