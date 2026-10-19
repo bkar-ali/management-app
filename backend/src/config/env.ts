@@ -13,7 +13,7 @@ if (!RESNED_EMAIL_FROM) {
 }
 
 export const env = {
-  PORT: process.env.PORT,
+  PORT: process.env.PORT || 5000,
   DATABASE_URL: process.env.DATABASE_URL,
   RESEND_API_KEY: process.env.RESEND_API_KEY,
   JWT_SECRET: process.env.JWT_SECRET!,

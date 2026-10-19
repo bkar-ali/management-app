@@ -6,6 +6,7 @@ import {
   passwordOperations,
 } from "../../container/index.js";
 import { loginSchema } from "../../validators/auth/loginSchema.js";
+import { cookieOptions } from "../../utils/generateTokenAndSetCookie.js";
 
 const loginUseCase = new LoginUser(
   userRepository,
@@ -27,12 +28,8 @@ export const login = async (req: Request, res: Response) => {
 
   switch (result.type) {
     case "SUCCESS":
-      res.cookie("token", result.token, {
-        httpOnly: true,
-        secure: false,
-        sameSite: "lax",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-      });
+      res.cookie("token", result.token, cookieOptions);
+
       return res.status(200).json({
         success: true,
         type: result.type,

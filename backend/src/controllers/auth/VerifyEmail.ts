@@ -5,6 +5,7 @@ import { ResendEmailService } from "../../infrastructure/services/ResendEmailSer
 
 import { VerifyEmail } from "../../application/use-cases/auth/VerifyEmail.js";
 import { JwtAuthTokenService } from "../../infrastructure/services/JwtAuthTokenService.js";
+import { cookieOptions } from "../../utils/generateTokenAndSetCookie.js";
 
 const userRepository = new PrismaUserRepository();
 const emailService = new ResendEmailService();
@@ -24,12 +25,13 @@ export const verifyEmail = async (req: Request, res: Response) => {
     return res.status(400).json(result);
   }
 
-  res.cookie("token", result.token, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "lax",
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
+  res.cookie("token", result.token, cookieOptions);
+  // res.cookie("token", result.token, {
+  //   httpOnly: true,
+  //   secure: false,
+  //   sameSite: "lax",
+  //   maxAge: 7 * 24 * 60 * 60 * 1000,
+  // });
 
   return res.status(200).json({
     success: true,
