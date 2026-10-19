@@ -37,7 +37,14 @@ app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
 
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:3000", credentials: true })); // Enable CORS for the frontend URL with credentials support
+
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    credentials: true,
+  }),
+);
+// app.use(cors({ origin: "http://localhost:3000", credentials: true })); // Enable CORS for the frontend URL with credentials support
 
 app.use(cookieParser());
 // Routes
