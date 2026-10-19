@@ -1,6 +1,4 @@
 import "dotenv/config";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "./generated/prisma/client.js";
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -13,6 +11,7 @@ import teamRouter from "./routes/dashboard/teamRoutes.js";
 import authRouter from "./routes/auth/authRoutes.js";
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middleware/errorHandler.js";
+import { prisma } from "../prisma/prisma.js";
 
 // Express → npm i express - - save ~
 // Nodemon → npm i nodemon - - save-dev~
@@ -54,6 +53,21 @@ app.use("/search", searchRouter);
 app.use("/users", userRouter);
 app.use("/teams", teamRouter);
 app.use("/auth", authRouter);
+
+app.get("/health/db", async (_req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    const count = await prisma.project.count();
+    res.json({ db: "ok", projects: count });
+  } catch (error: any) {
+    console.error("DB health check failed:", error);
+    res.status(500).json({
+      db: "failed",
+      code: error?.code,
+      message: error?.message,
+    });
+  }
+});
 
 // Global Error Handler
 app.use(errorHandler);
